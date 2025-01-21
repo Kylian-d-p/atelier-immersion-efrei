@@ -36,10 +36,12 @@ document.querySelector("#start-fight").addEventListener("click", async () => {
       Voici les statistiques de ces combattants :
       - ${fighter1.name} : ${fighter1.health} points de vie, ${fighter1.attack} points d'attaque, ${fighter1.defense} points de défense, un dé à ${fighter1.diceFacesCount} faces.
       - ${fighter2.name} : ${fighter2.health} points de vie, ${fighter2.attack} points d'attaque, ${fighter2.defense} points de défense, un dé à ${fighter2.diceFacesCount} faces.
+
+      Le dé est jeté à chaque attaque et chaque défense, cela permet d'ajouter des points de compétences supplémentaires.
       
       Voici le résumé de ce combat : ${gameLogs}.
-      Rédige un texte de 3 ou 4 phrases pour décrire ce combat de façon épique.
-      Il faut que tu ne me retourne que le texte en question, sans phrase parasite d'introduction.`,
+      Rédige un texte de 3 ou 4 phrases pour décrire ce combat de façon épique, tu n'as pas besoin de décrire les statistiques des combattants, concenttre-toi sur les échanges de coups et imagine une histoire héroïque.
+      Il faut que tu ne me retournes que le texte en question, sans phrase parasite d'introduction.`,
     }),
   });
 
