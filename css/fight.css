@@ -15,6 +15,7 @@ body {
   width: 1000px;
   margin: 20px auto 0 auto;
   gap: 10px;
+  padding-bottom: 10px;
 }
 
 body > div:nth-child(1) {
