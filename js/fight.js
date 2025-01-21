@@ -17,7 +17,7 @@ export function generateFight(fighter1, fighter2) {
     const defender = playingQueue[0];
 
     const damage = attacker.attackFighter(defender);
-    history += `${attacker.nickname} envoie ${damage.dealtDamages} de dégats à ${defender.nickname}, ${defender.nickname} a pu se défendre et a tanké ${damage.absorbedDamages} de dégâts. Ainsi, ${defender.nickname} a reçu ${damage.trueDamages} dégâts réels.\n`;
+    history += `${attacker.nickname} envoie ${damage.trueDamages} de dégats à ${defender.nickname}, ${defender.nickname} a pu se défendre et a tanké ${damage.absorbedDamages} de dégâts. Ainsi, ${defender.nickname} a reçu ${damage.trueDamages} dégâts réels.\n`;
 
     playingQueue.push(attacker);
   }
