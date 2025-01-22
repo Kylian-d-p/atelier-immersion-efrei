@@ -24,7 +24,17 @@ document.querySelector("#start-fight").addEventListener("click", async () => {
 
   storyElement.innerText = "Génération de l'histoire...";
 
-  const res = await fetch("http://localhost:11434/api/generate", {
+  document.querySelector("#start-fight").disabled = true;
+
+  const hostRes = await fetch("/host.json");
+
+  if (!hostRes.ok) {
+    alert("Un erreur est survenue");
+  }
+
+  const { host } = await hostRes.json();
+
+  const generationRes = await fetch(`http://${host}:11434/api/generate`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -32,10 +42,10 @@ document.querySelector("#start-fight").addEventListener("click", async () => {
     body: JSON.stringify({
       stream: true,
       model: "llama3.1:latest",
-      prompt: `Un combat entre ${fighter1.name} et ${fighter2.name} a eu lieu.
+      prompt: `Un combat entre ${fighter1.nickname} et ${fighter2.nickname} a eu lieu.
       Voici les statistiques de ces combattants :
-      - ${fighter1.name} : ${fighter1.health} points de vie, ${fighter1.attack} points d'attaque, ${fighter1.defense} points de défense, un dé à ${fighter1.diceFacesCount} faces.
-      - ${fighter2.name} : ${fighter2.health} points de vie, ${fighter2.attack} points d'attaque, ${fighter2.defense} points de défense, un dé à ${fighter2.diceFacesCount} faces.
+      - ${fighter1.nickname} : ${fighter1.health} points de vie, ${fighter1.attack} points d'attaque, ${fighter1.defense} points de défense, un dé à ${fighter1.diceFacesCount} faces.
+      - ${fighter2.nickname} : ${fighter2.health} points de vie, ${fighter2.attack} points d'attaque, ${fighter2.defense} points de défense, un dé à ${fighter2.diceFacesCount} faces.
 
       Le dé est jeté à chaque attaque et chaque défense, cela permet d'ajouter des points de compétences supplémentaires.
       
@@ -45,21 +55,33 @@ document.querySelector("#start-fight").addEventListener("click", async () => {
     }),
   });
 
-  if (res.ok) {
-    const reader = res.body.getReader();
+  if (generationRes.ok) {
+    const reader = generationRes.body.getReader();
     const decoder = new TextDecoder();
     let done = false;
+    let buffer = "";
     storyElement.innerText = "";
     storyElement.classList.remove("muted");
 
     while (!done) {
       const { value, done: doneReading } = await reader.read();
       done = doneReading;
-      const spanElement = document.createElement("span");
-      spanElement.innerText = JSON.parse(decoder.decode(value, { stream: true })).response;
-      storyElement.appendChild(spanElement);
+      buffer += decoder.decode(value, { stream: true });
+
+      const lines = buffer.split("\n");
+      buffer = lines.pop();
+
+      lines.forEach((line) => {
+        if (line.trim()) {
+          const spanElement = document.createElement("span");
+          spanElement.innerText = JSON.parse(line).response;
+          storyElement.appendChild(spanElement);
+        }
+      });
     }
   } else {
     alert("Aïe... Il y a eu une erreur.");
   }
+
+  document.querySelector("#start-fight").disabled = false;
 });
